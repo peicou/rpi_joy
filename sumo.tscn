@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scripts/lvl_sumo.gd" type="Script" id=2]
+[ext_resource path="res://walls.tscn" type="PackedScene" id=3]
+
+[node name="sumo" type="Node2D"]
+__meta__ = {
+"_edit_horizontal_guides_": [ 39.9702 ]
+}
+
+[node name="level" type="Node2D" parent="."]
+script = ExtResource( 2 )
+
+[node name="walls" parent="." instance=ExtResource( 3 )]
+
+[node name="powerTimers" type="Node" parent="."]
+
+[node name="second0" type="Timer" parent="powerTimers"]
+autostart = true
+
+[node name="second1" type="Timer" parent="powerTimers"]
+autostart = true
+
+[node name="second2" type="Timer" parent="powerTimers"]
+autostart = true
+
+[node name="second3" type="Timer" parent="powerTimers"]
+autostart = true

@@ -1,0 +1,137 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://assets/ball.png" type="Texture" id=1]
+[ext_resource path="res://assets/male_reference.png" type="Texture" id=3]
+
+[sub_resource type="CircleShape2D" id=1]
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 7.02909
+height = 21.1065
+
+[sub_resource type="CapsuleShape2D" id=3]
+radius = 3.1983
+height = 15.0753
+
+[node name="mrDoot" type="Node2D"]
+
+[node name="male_reference" type="Sprite" parent="."]
+modulate = Color( 1, 1, 1, 0.345098 )
+position = Vector2( -1.14908, -59.1405 )
+scale = Vector2( 0.22, 0.22 )
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="head" type="RigidBody2D" parent="."]
+position = Vector2( 0, -110 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="head"]
+scale = Vector2( 0.9, 0.9 )
+shape = SubResource( 1 )
+
+[node name="ball" type="Sprite" parent="head"]
+scale = Vector2( 0.4, 0.4 )
+texture = ExtResource( 1 )
+
+[node name="neck" type="PinJoint2D" parent="."]
+position = Vector2( 0, -100 )
+scale = Vector2( 0.5, 0.5 )
+node_a = NodePath("../head")
+node_b = NodePath("../torso")
+disable_collision = false
+softness = 0.1
+
+[node name="torso" type="RigidBody2D" parent="."]
+position = Vector2( 0, -74 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="torso"]
+position = Vector2( 0, -6.81133 )
+shape = SubResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="torso"]
+position = Vector2( 0, -1.18051 )
+scale = Vector2( 0.27, 0.315533 )
+
+[node name="Lshoulder" type="PinJoint2D" parent="."]
+position = Vector2( -8, -96 )
+scale = Vector2( 0.5, 0.5 )
+node_a = NodePath("../Larm")
+node_b = NodePath("../torso")
+disable_collision = false
+
+[node name="Larm" type="RigidBody2D" parent="."]
+position = Vector2( -14, -86 )
+rotation = 0.174533
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Larm"]
+shape = SubResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="Larm"]
+
+[node name="Lelbow" type="PinJoint2D" parent="."]
+position = Vector2( -16, -75 )
+scale = Vector2( 0.5, 0.5 )
+node_a = NodePath("../Larm")
+node_b = NodePath("../Lfore")
+disable_collision = false
+softness = 0.5
+
+[node name="Lfore" type="RigidBody2D" parent="."]
+position = Vector2( -15, -64 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Lfore"]
+shape = SubResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="Lfore"]
+
+[node name="Lwrist" type="PinJoint2D" parent="."]
+position = Vector2( -15, -53 )
+scale = Vector2( 0.5, 0.5 )
+node_a = NodePath("../Lfore")
+node_b = NodePath("../Lhand")
+disable_collision = false
+softness = 0.3
+
+[node name="Lhand" type="KinematicBody2D" parent="."]
+position = Vector2( -14, -45 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Lhand"]
+scale = Vector2( 0.7, 0.7 )
+shape = SubResource( 1 )
+
+[node name="ball" type="Sprite" parent="Lhand"]
+scale = Vector2( 0.3, 0.3 )
+texture = ExtResource( 1 )
+
+[node name="Rshoulder" type="PinJoint2D" parent="."]
+position = Vector2( 10, -96 )
+scale = Vector2( 0.5, 0.5 )
+node_a = NodePath("../Rarm")
+node_b = NodePath("../torso")
+disable_collision = false
+
+[node name="Rarm" type="RigidBody2D" parent="."]
+position = Vector2( 15, -86 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rarm"]
+shape = SubResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="Rarm"]
+
+[node name="Relbow" type="PinJoint2D" parent="."]
+position = Vector2( 16, -75 )
+scale = Vector2( 0.5, 0.5 )
+node_a = NodePath("../Rarm")
+node_b = NodePath("../Rfore")
+disable_collision = false
+softness = 0.5
+
+[node name="Rfore" type="RigidBody2D" parent="."]
+position = Vector2( 15, -64 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rfore"]
+shape = SubResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="Rfore"]

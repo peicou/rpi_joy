@@ -1,0 +1,136 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://walls.tscn" type="PackedScene" id=1]
+[ext_resource path="res://assets/P_hold.png" type="Texture" id=3]
+[ext_resource path="res://assets/ball.png" type="Texture" id=4]
+[ext_resource path="res://scripts/lvl_intro.gd" type="Script" id=6]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+var player_scene
+# p1: 210, 195. p2: 210, 255...
+var array_initialPos = [265, 75, 755, 75, 265, 430, 755, 430]
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+    #subscribe to connect/disconnect signals
+    ctrl_players_ui.get_node(\"controller\").connect(\"sig_controllerUnplugged\", self, \"doLeaveGame\")
+    ctrl_players_ui.get_node(\"controller\").connect(\"sig_controllerPlugged\", self, \"doJoinGame\")
+
+func addPlayer(device):
+    var pNode
+    for item in get_children():
+        # check if device has a player node already loaded
+        if item.playerNumber == device:
+            pNode = item
+    
+    if pNode == null:    
+            # create a player node and add it to players
+            pNode = load(\"res://scripts/player.gd\").new() 
+            pNode.body1 = load(\"res://player_intro.tscn\").instance()
+            pNode.add_child(pNode.body1)
+            add_child(pNode)              
+    
+    if pNode.isSpawned == 0:
+            pNode.isSpawned = 1
+            print(\"player %s has joined the game\" % (device + 1))
+            pNode.playerNumber = device
+            pNode.currentLevel = \"intro\"
+            pNode.inPos = Vector2(array_initialPos[device * 2], array_initialPos[(device * 2) + 1])
+            pNode.body1.position = pNode.inPos
+            figureOutColor(pNode)
+            pNode.body1.set_collision_mask_bit(0, true)
+            pNode.body1.set_collision_layer_bit(0, true)
+            get_node(\"../level\").doJoinLeave(pNode, 1); 
+            globals.playerCount+=1
+            pNode.show()
+
+func figureOutColor(pNode):
+    # First time load from white, red, green, blue.
+    if (pNode.randoColorBall == 0):
+        pNode.ballColor = ctrl_players_ui.get_node(\"controller/balls/available%s\" % (pNode.playerNumber + 1)).modulate
+        pNode.modulate = pNode.ballColor
+        pNode.randoColorBall = 1
+    else:
+    # other times: Generate random color, store in player.ballColor, load to 
+    # ball.availableN
+        pNode.ballColor = Color (randf(), randf(), randf(), 1)
+        pNode.modulate = pNode.ballColor
+        ctrl_players_ui.get_node(\"controller/balls/available%s\" % (pNode.playerNumber + 1)).modulate = pNode.ballColor    
+
+func doLeaveGame(device):
+    var pNode
+    for item in get_children():
+        # find the quiter
+        if item.playerNumber == device:
+            pNode = item
+    if pNode.isSpawned == 1:
+        pNode.isSpawned = 0
+        pNode.body1.set_collision_mask_bit(0, false)
+        pNode.body1.set_collision_layer_bit(0, false)
+        get_node(\"../level\").doJoinLeave(pNode, 0)
+        pNode.isReady = 0
+        print(\"player %s has left the game\" % (device + 1))
+        pNode.body1.position = pNode.inPos
+        pNode.hide()
+        globals.playerCount-=1
+
+func doJoinGame(_device):
+    pass
+"
+
+[node name="joypads" type="Node2D"]
+
+[node name="level" type="Node2D" parent="."]
+script = ExtResource( 6 )
+
+[node name="lbl_gameReady" type="Label" parent="level"]
+visible = false
+margin_left = 55.1093
+margin_top = 286.269
+margin_right = 197.109
+margin_bottom = 306.269
+text = "Press \"start\" to begin"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="avatars" type="Node2D" parent="level"]
+
+[node name="frame1" type="Sprite" parent="level/avatars"]
+position = Vector2( 70, 70 )
+scale = Vector2( 0.3, 0.3 )
+texture = ExtResource( 3 )
+
+[node name="frame2" type="Sprite" parent="level/avatars"]
+position = Vector2( 170, 70 )
+scale = Vector2( 0.3, 0.3 )
+texture = ExtResource( 3 )
+
+[node name="frame3" type="Sprite" parent="level/avatars"]
+position = Vector2( 70, 140 )
+scale = Vector2( 0.3, 0.3 )
+texture = ExtResource( 3 )
+
+[node name="frame4" type="Sprite" parent="level/avatars"]
+position = Vector2( 170, 140 )
+scale = Vector2( 0.3, 0.3 )
+texture = ExtResource( 3 )
+
+[node name="start_circle" type="Area2D" parent="level"]
+position = Vector2( -10, 0 )
+
+[node name="sc_sprite" type="Sprite" parent="level/start_circle"]
+position = Vector2( 520, 260 )
+texture = ExtResource( 4 )
+
+[node name="sc_collision" type="CollisionPolygon2D" parent="level/start_circle"]
+position = Vector2( 519.738, 256.591 )
+scale = Vector2( 1.55069, 1.76049 )
+polygon = PoolVector2Array( -13.3506, 3.90273, -11.434, 8.47073, -7.26257, 12.145, -2.97845, 13.8332, 3.22223, 14.1311, 7.73184, 12.0457, 11.7905, 8.47073, 13.9325, 4.39923, 14.2708, -0.0694733, 11.9032, -4.63748, 8.1828, -8.21248, 3.56046, -10.1986, -3.09122, -10.2979, -8.05179, -8.11316, -11.3212, -4.7368, -13.8015, -0.764603 )
+
+[node name="walls" parent="level" instance=ExtResource( 1 )]
+
+[node name="players" type="Node2D" parent="."]
+script = SubResource( 1 )
