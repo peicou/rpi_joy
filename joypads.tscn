@@ -1,9 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://walls.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/P_hold.png" type="Texture" id=3]
 [ext_resource path="res://assets/ball.png" type="Texture" id=4]
 [ext_resource path="res://scripts/lvl_intro.gd" type="Script" id=6]
+
+[sub_resource type="CircleShape2D" id=2]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
@@ -15,12 +17,12 @@ var array_initialPos = [265, 75, 755, 75, 265, 430, 755, 430]
 # Called when the node enters the scene tree for the first time.
 func _ready():
     #subscribe to connect/disconnect signals
-    ctrl_players_ui.get_node(\"controller\").connect(\"sig_controllerUnplugged\", self, \"doLeaveGame\")
-    ctrl_players_ui.get_node(\"controller\").connect(\"sig_controllerPlugged\", self, \"doJoinGame\")
+    ctrl_players_ui.connect(\"sig_controllerUnplugged\", self, \"doLeaveGame\")
+    ctrl_players_ui.connect(\"sig_controllerPlugged\", self, \"doJoinGame\")
 
 func addPlayer(device):
     var pNode
-    for item in get_children():
+    for item in ctrl_players_ui.get_node(\"players\").get_children():
         # check if device has a player node already loaded
         if item.playerNumber == device:
             pNode = item
@@ -30,7 +32,7 @@ func addPlayer(device):
             pNode = load(\"res://scripts/player.gd\").new() 
             pNode.body1 = load(\"res://player_intro.tscn\").instance()
             pNode.add_child(pNode.body1)
-            add_child(pNode)              
+            ctrl_players_ui.get_node(\"players\").add_child(pNode)              
     
     if pNode.isSpawned == 0:
             pNode.isSpawned = 1
@@ -61,7 +63,7 @@ func figureOutColor(pNode):
 
 func doLeaveGame(device):
     var pNode
-    for item in get_children():
+    for item in ctrl_players_ui.get_node(\"players\").get_children():
         # find the quiter
         if item.playerNumber == device:
             pNode = item
@@ -77,6 +79,9 @@ func doLeaveGame(device):
         globals.playerCount-=1
 
 func doJoinGame(_device):
+    pass
+
+func cleanup():
     pass
 "
 
@@ -119,16 +124,14 @@ scale = Vector2( 0.3, 0.3 )
 texture = ExtResource( 3 )
 
 [node name="start_circle" type="Area2D" parent="level"]
-position = Vector2( -10, 0 )
+position = Vector2( 520, 260 )
 
 [node name="sc_sprite" type="Sprite" parent="level/start_circle"]
-position = Vector2( 520, 260 )
 texture = ExtResource( 4 )
 
-[node name="sc_collision" type="CollisionPolygon2D" parent="level/start_circle"]
-position = Vector2( 519.738, 256.591 )
-scale = Vector2( 1.55069, 1.76049 )
-polygon = PoolVector2Array( -13.3506, 3.90273, -11.434, 8.47073, -7.26257, 12.145, -2.97845, 13.8332, 3.22223, 14.1311, 7.73184, 12.0457, 11.7905, 8.47073, 13.9325, 4.39923, 14.2708, -0.0694733, 11.9032, -4.63748, 8.1828, -8.21248, 3.56046, -10.1986, -3.09122, -10.2979, -8.05179, -8.11316, -11.3212, -4.7368, -13.8015, -0.764603 )
+[node name="sc_collision" type="CollisionShape2D" parent="level/start_circle"]
+scale = Vector2( 2, 2 )
+shape = SubResource( 2 )
 
 [node name="walls" parent="level" instance=ExtResource( 1 )]
 

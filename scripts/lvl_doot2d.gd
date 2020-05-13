@@ -9,17 +9,17 @@ func _process(_delta):
 # Called when the node enters the scene tree for the first time.
 func _ready():
     pass
-    #sceneChanger.connect("sig_sceneChanged", self, "showPlayers")
+    sceneChanger.connect("sig_sceneChanged", self, "showPlayers")
+    # unload old/load new the player nodes
+    for item in ctrl_players_ui.get_node("players").get_children():
+        if item.isSpawned == 1:
+            if item.body1 != null : item.body1.free()
+            if item.body2 != null : item.body2.free()
+            item.body1 = get_node("../mrDoot/Lhand")
+            item.body2 = get_node("../mrDoot/Rhand")
     # update the collision box so it matches the field frame
     # get_node("../walls").growFieldCollision(0)
     
-    # move the players to the doot2d origins. 
-    # First hide them all:
-    #for item in ctrl_players_ui.get_node("players").get_children():
-        #item.visible = false
-    # then move to initial positions in Sumo
-        #gotoInit(item)
-               
 func gotoInit(player):
     var device = player.playerNumber
     # store initial values for Sumo
@@ -30,6 +30,7 @@ func gotoInit(player):
     player.modulate = player.ballColor
 
 func showPlayers():
+    # pass
     # Show the active ones:
     for item in ctrl_players_ui.get_node("players").get_children():
         if item.isSpawned == 1:

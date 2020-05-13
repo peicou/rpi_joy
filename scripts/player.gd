@@ -37,19 +37,25 @@ func is_ready(color):
 func move(lvl):
     match lvl:
         "doot2d":
-            # calculate R stick direction
+            #calculate movement from left joystick
+            movedir.x = -Input.get_action_strength("dev%s_LeftJoystic_left" % playerNumber) + Input.get_action_strength("dev%s_LeftJoystic_right" % playerNumber)
+            movedir.y = +Input.get_action_strength("dev%s_LeftJoystic_down" % playerNumber) - Input.get_action_strength("dev%s_LeftJoystic_up" % playerNumber)
+            var velocityL = movedir.clamped(1) * speed
+            #calculate movement from right joystick
             aimdir.x = -Input.get_action_strength("dev%s_RightJoystick_left" % playerNumber) + Input.get_action_strength("dev%s_RightJoystick_right" % playerNumber)
             aimdir.y = +Input.get_action_strength("dev%s_RightJoystick_down" % playerNumber) - Input.get_action_strength("dev%s_RightJoystick_up" % playerNumber)
+            var velocityR = aimdir.clamped(1) * speed
+            #apply movement only if distance between hands is < ape index
+            if (isReady == 0):
+                if(body1.get_global_position().distance_to(body2.get_global_position()) <= 120):
+                    velocityL = body1.move_and_slide(velocityL)
+                    velocityR = body2.move_and_slide(velocityR)
+#                if body1.get_slide_count() != 0 :
+#                    powerLvl = 0
+#                    emit_signal("collided", playerNumber)
+
         
-            #var aimAngle = aimdir.angle()
-            if (aimdir.y != 0) || (aimdir.x != 0):
-                #change sprite to arrow ball
-                #$ball.set_texture(tex_ball_arrow)
-                #apply rotation
-                rotation = aimdir.angle()
-            else:
-                pass #$ball.set_texture(tex_ball)
-        _:
+        _:        
             #calculate movement from left joystick
             movedir.x = -Input.get_action_strength("dev%s_LeftJoystic_left" % playerNumber) + Input.get_action_strength("dev%s_LeftJoystic_right" % playerNumber)
             movedir.y = +Input.get_action_strength("dev%s_LeftJoystic_down" % playerNumber) - Input.get_action_strength("dev%s_LeftJoystic_up" % playerNumber)

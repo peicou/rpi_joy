@@ -16,25 +16,25 @@ func _on_joy_connection_changed(device_id, connected):
             devicesConnected[device_id] = 1
             match device_id:
                 0:
-                    $balls/available1.modulate = Color (1, 1, 1, 1)
+                    $controller/balls/available1.modulate = Color (1, 1, 1, 1)
                 1:
-                    $balls/available2.modulate = Color (1, 0, 0, 1)
+                    $controller/balls/available2.modulate = Color (1, 0, 0, 1)
                 2:
-                    $balls/available3.modulate = Color (0, 1, 0, 1)
+                    $controller/balls/available3.modulate = Color (0, 1, 0, 1)
                 3:
-                    $balls/available4.modulate = Color (0, 0, 1, 1)
+                    $controller/balls/available4.modulate = Color (0, 0, 1, 1)
     else:
         devicesConnected[device_id] = 0
         emit_signal("sig_controllerUnplugged", device_id)
         match device_id:
             0:
-                $balls/available1.modulate.a = 0.25
+                $controller/balls/available1.modulate.a = 0.25
             1:
-                $balls/available2.modulate.a = 0.25
+                $controller/balls/available2.modulate.a = 0.25
             2:
-                $balls/available3.modulate.a = 0.25
+                $controller/balls/available3.modulate.a = 0.25
             3:
-                $balls/available4.modulate.a = 0.25
+                $controller/balls/available4.modulate.a = 0.25
 
 func _input(event):
     if event.is_action_pressed("dev%s_btn_10" % event.device):
@@ -48,8 +48,8 @@ func doAvailableControllers():
             devicesConnected[i] = 1
     
     # color balls depending on available controllers
-    $balls/available1.modulate.a = 0.25 if devicesConnected[0] == 0 else 1.0
-    $balls/available2.modulate = Color (1, 0, 0, 0.25) if devicesConnected[1] == 0 else Color (1, 0, 0, 1)
-    $balls/available3.modulate = Color (0, 1, 0, 0.25) if devicesConnected[2] == 0 else Color (0, 1, 0, 1)
-    $balls/available4.modulate = Color (0, 0, 1, 0.25) if devicesConnected[3] == 0 else Color (0, 0, 1, 1)
+    $controller/balls/available1.modulate.a = 0.25 if devicesConnected[0] == 0 else 1.0
+    $controller/balls/available2.modulate = Color (1, 0, 0, 0.25) if devicesConnected[1] == 0 else Color (1, 0, 0, 1)
+    $controller/balls/available3.modulate = Color (0, 1, 0, 0.25) if devicesConnected[2] == 0 else Color (0, 1, 0, 1)
+    $controller/balls/available4.modulate = Color (0, 0, 1, 0.25) if devicesConnected[3] == 0 else Color (0, 0, 1, 1)
 

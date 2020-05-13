@@ -29,16 +29,17 @@ func gotoInit(player):
     player.modulate = player.ballColor
 
 func showPlayers():
+    pass
     # Show the active ones:
-    for item in ctrl_players_ui.get_node("players").get_children():
-        if item.isSpawned == 1:
-            item.visible = true
-            item.isReady = 0
-            item.get_node("power").visible = true
-            # connect 1 second timer
-            get_node("../powerTimers/second%s" % item.playerNumber).connect("timeout", self, "_on_sec_timeout", [item.playerNumber])
-            item.connect("collided", self, "_on_collision")
-            item.currentLevel = "sumo"
+#    for item in ctrl_players_ui.get_node("players").get_children():
+#        if item.isSpawned == 1:
+#            item.visible = true
+#            item.isReady = 0
+#            item.get_node("power").visible = true
+#            # connect 1 second timer
+#            get_node("../powerTimers/second%s" % item.playerNumber).connect("timeout", self, "_on_sec_timeout", [item.playerNumber])
+#            item.connect("collided", self, "_on_collision")
+#            item.currentLevel = "sumo"
 
 func _on_sec_timeout(pNumb):
     var item = ctrl_players_ui.get_node("players/player%s" % pNumb)

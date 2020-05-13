@@ -1,6 +1,10 @@
 extends Node2D
 
-var tex_array = [preload("res://assets/P1.png"), preload("res://assets/P2.png"), preload("res://assets/P3.png"), preload("res://assets/P4.png"), preload("res://assets/P_hold.png")]
+var tex_array = [preload("res://assets/P1.png"), 
+                 preload("res://assets/P2.png"), 
+                 preload("res://assets/P3.png"), 
+                 preload("res://assets/P4.png"), 
+                 preload("res://assets/P_hold.png")]
 var tex_ball_arrow
 var tex_ball
 var gold = Color (0.83, 0.69, 0.22, 1)
@@ -65,4 +69,4 @@ func doJoinLeave(pNode, inOut):
                 $avatars/frame4.texture = tex_array[4]
         if playersReady < minPlayers:
             get_node("lbl_gameReady").visible = false
-    
+
